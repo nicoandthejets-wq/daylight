@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Philosophy Research Intelligence Dashboard v3</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { background-color: #f8f9fa; font-family: 'Pretendard', sans-serif; overflow-x: hidden; }
+        .card { border: none; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); background: #ffffff; height: 100%; }
+        .header-bg { background: white; border-bottom: 1px solid #eef0f2; padding: 30px 0; margin-bottom: 30px; }
+        .stat-card { background: linear-gradient(135deg, #4e73df 0%, #224abe 100%); color: white; border-radius: 16px; }
+        .chart-box { height: 300px; position: relative; }
+        
+        /* 워드클라우드 스타일 */
+        .word-cloud-container {
+            height: 300px;
+            position: relative;
+            background: #fff;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .cloud-word {
+            position: absolute;
+            font-weight: 800;
+            white-space: nowrap;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+        .cloud-word:hover { transform: scale(1.2) !important; color: #ff4757 !important; z-index: 100; }
+        .w1 { font-size: 3.5rem; color: #4e73df; top: 35%; left: 35%; }
+        .w2 { font-size: 2.8rem; color: #1cc88a; top: 15%; right: 25%; transform: rotate(-10deg); }
+        .w3 { font-size: 2.5rem; color: #36b9cc; bottom: 20%; left: 15%; transform: rotate(15deg); }
+        .w4 { font-size: 2.2rem; color: #f6c23e; top: 10%; left: 20%; }
+        .w5 { font-size: 1.8rem; color: #e74a3b; bottom: 35%; right: 15%; transform: rotate(-20deg); }
+        .w6 { font-size: 1.6rem; color: #858796; top: 50%; right: 5%; transform: rotate(90deg); }
+        .w7 { font-size: 1.4rem; color: #5a5c69; bottom: 10%; left: 40%; }
+    </style>
+</head>
+<body>
+
+<div class="header-bg shadow-sm">
+    <div class="container d-flex justify-content-between align-items-center">
+        <div>
+            <h2 class="fw-bold m-0 text-dark">🏛️ 철학 연구 인사이트 대시보드 v3</h2>
+            <p class="text-muted m-0 small">Philosophy & Linguistic Analysis Trends</p>
+        </div>
+        <div class="text-end">
+            <span class="badge bg-light text-dark border">Data Updated: 2026.04.26</span>
+        </div>
+    </div>
+</div>
+
+<div class="container pb-5">
+    <div class="row g-3 mb-4 text-center">
+        <div class="col-md-3">
+            <div class="card stat-card p-3 shadow-sm">
+                <h6>총 분석 논문</h6>
+                <h3 class="fw-bold m-0">312건</h3>
+                <small class="opacity-75">학술지 12종 통합</small>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 border-bottom border-primary border-4">
+                <h6>연구 집중도</h6>
+                <h5 class="text-primary fw-bold m-0">언어철학</h5>
+                <small class="text-muted">전체 담론의 42%</small>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 border-bottom border-danger border-4">
+                <h6>급상승 트렌드</h6>
+                <h5 class="text-danger fw-bold m-0">발터 벤야민</h5>
+                <small class="text-danger">(전년 比 42%↑)</small>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3 border-bottom border-success border-4">
+                <h6>융합 연구 비중</h6>
+                <h5 class="text-success fw-bold m-0">28.4%</h5>
+                <small class="text-muted">불교/미학/매체학</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-4">
+        <div class="col-12">
+            <div class="card p-4">
+                <h5 class="fw-bold mb-4">📈 연도별 연구 동향 (발행 건수)</h5>
+                <div class="chart-box">
+                    <canvas id="mainTrendChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-7">
+            <div class="card p-4">
+                <h5 class="fw-bold mb-4">🔑 핵심 키워드 (Word Cloud)</h5>
+                <div class="word-cloud-container">
+                    <span class="cloud-word w1">언어철학</span>
+                    <span class="cloud-word w2">비트겐슈타인</span>
+                    <span class="cloud-word w3">분석철학</span>
+                    <span class="cloud-word w4">불교철학</span>
+                    <span class="cloud-word w5">의미론</span>
+                    <span class="cloud-word w6">존재론</span>
+                    <span class="cloud-word w7">개념분석</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-5">
+            <div class="card p-4">
+                <h5 class="fw-bold mb-4">🧩 주요 연구 분야 비중</h5>
+                <div class="chart-box">
+                    <canvas id="philPieChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-7">
+            <div class="card p-4">
+                <h5 class="fw-bold mb-4">🌊 연도별 담론 지형 변화 (전통 vs 현대/융합)</h5>
+                <div class="chart-box">
+                    <canvas id="landscapeChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="card p-4">
+                <h5 class="fw-bold mb-4">🔍 연구 공백 분석 (Research Gap)</h5>
+                <div class="chart-box">
+                    <canvas id="gapChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 1. 연도별 연구 동향
+    const ctxTrend = document.getElementById('mainTrendChart').getContext('2d');
+    new Chart(ctxTrend, {
+        type: 'line',
+        data: {
+            labels: ['03','05','07','09','11','13','15','17','19','21','23','25'],
+            datasets: [{
+                label: '논문 발행 수',
+                data: [3, 7, 12, 19, 24, 30, 38, 45, 52, 65, 62, 38],
+                borderColor: '#4e73df',
+                backgroundColor: 'rgba(78, 115, 223, 0.1)',
+                fill: true,
+                tension: 0.4
+            }]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
+    });
+
+    // 2. 주요 연구 분야 비중 (도넛)
+    const ctxPie = document.getElementById('philPieChart').getContext('2d');
+    new Chart(ctxPie, {
+        type: 'doughnut',
+        data: {
+            labels: ['언어철학', '불교학', '서양근대', '인식론', '기타'],
+            datasets: [{
+                data: [42, 28, 15, 10, 5],
+                backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc', '#f6c23e', '#e74a3b']
+            }]
+        },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+    });
+
+    // 3. 담론 지형 변화 (라인)
+    const ctxLandscape = document.getElementById('landscapeChart').getContext('2d');
+    new Chart(ctxLandscape, {
+        type: 'line',
+        data: {
+            labels: ['03','07','11','15','19','23','25'],
+            datasets: [{
+                label: '전통 철학',
+                data: [30, 35, 40, 45, 42, 38, 35],
+                borderColor: '#9fa8da',
+                fill: false,
+                borderDash: [5, 5],
+                tension: 0.4
+            }, {
+                label: '현대/융합 철학',
+                data: [5, 12, 20, 35, 52, 65, 78],
+                borderColor: '#1a237e',
+                backgroundColor: 'rgba(26, 35, 126, 0.1)',
+                fill: true,
+                tension: 0.4
+            }]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
+    });
+
+    // 4. 연구 공백 분석 (레이더)
+    const ctxGap = document.getElementById('gapChart').getContext('2d');
+    new Chart(ctxGap, {
+        type: 'radar',
+        data: {
+            labels: ['언어분석', '역사주의', '실재론', '융합/매체', '윤리학'],
+            datasets: [{
+                label: '현재 연구 밀도',
+                data: [90, 70, 60, 30, 50],
+                backgroundColor: 'rgba(26, 35, 126, 0.2)',
+                borderColor: '#1a237e',
+                pointBackgroundColor: '#1a237e'
+            }]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
+    });
+</script>
+
+</body>
+</html>
